@@ -1,45 +1,52 @@
-# Playwright-ts-cucumber
+# 🎭 Playwright-ts-cucumber Setup Guide
 
-🧪 Playwright + Cucumber Setup Guide
-This guide explains how to configure a project using Playwright and Cucumber in Visual Studio Code. It is based on my own experience, including the errors, issues, and needs that came up throughout the project.
+This guide is based on my personal experience, including common errors, configuration issues, and needs that appeared during the project.
 
-🚀 Steps to Set Up
-1. Create a New Project
-Start by creating a new Node.js project or use an existing one.
+---
 
-2. Install Required Extensions
-In Visual Studio Code, install the following extensions:
+🛠️ **Steps to Set Up**
 
-Playwright Test for VS Code
+* Create a new Project
 
-Cucumber (Gherkin) Full Support
+* Install Playwright Test and Cucumber (Gherkin) plugin in the Visual Studio Code extensions marketplace
 
-3. Install Playwright
-Open the terminal in your project folder and run:
+* Open the terminal and run the following command to install Playwright:
+  
+  > Test: Install Playwright
 
-Test: Install Playwright
-This will set up Playwright with its dependencies.
+* Install dependencies:
 
-4. Install NPM Dependencies
-Run the following commands in your terminal to install Cucumber and ts-node:
+```bash
+$ npm i @cucumber/cucumber -D
+$ npm i ts-node -D
 
-npm install @cucumber/cucumber --save-dev
-npm install ts-node --save-dev
+📦 Important:
 
-5. Update package.json Script
-In your package.json, add a test script like this:
+In the folder where your package.json is located, add the following script:
+
 "scripts": {
-  "test": "cucumber-js test"
+  "test": "cucumber-js test" // by default, runs the js command
 }
-This command tells Node to run tests using the cucumber-js CLI in the test folder.
 
-6. Configure Feature and Step Paths (Optional)
-If you're using custom directories for your .feature files or step definitions:
+⚙️ Optional Configuration: Feature and Step Definitions
 
-1. Go to VS Code Settings.
-2. Search for Cucumber.
-3. Locate the following settings:
-4. cucumber.features – path to your .feature files
-5. cucumber.glue – path to your step definitions
-6. Set the correct paths for your project structure.
+If you need to modify Cucumber directory paths for .feature files and step definitions:
+
+Go to Visual Studio Code settings
+
+Use the search bar and type: "cucumber"
+
+Locate the following keys inside the settings.json (or UI panel):
+
+"cucumber.features" → path to your .feature files
+
+"cucumber.glue" → path to your step definitions
+
+Override the default parameters with the correct path according to your project structure.
+
+Example:
+
+"cucumber.features": ["src/test/features/**/*.feature"],
+"cucumber.glue": ["src/test/steps/**/*.ts"]
+
 
