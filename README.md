@@ -220,4 +220,57 @@ Write natural language scenarios in .feature files
 * Cucumber matches each phrase to code
 * Playwright automates the browser
 
- 
+##  🧪 How to Use XPath in Playwright
+Playwright supports XPath selectors using the xpath= prefix or the .locator() method.
+
+## 🧭 What is XPath?
+XPath (XML Path Language) is a query language used to navigate through elements and attributes in an XML or HTML document. In web automation with tools like Playwright, XPath is used to locate elements in the DOM (Document Object Model).
+
+🔹 Basic Syntax in Playwright
+```
+const element = page.locator('xpath=//button[text()="Login"]');
+await element.click();
+```
+
+Or alternatively:
+```
+const element = await page.$('//button[text()="Login"]');
+await element.click();
+```
+
+Both approaches locate a button with the text "Login" and simulate a click.
+
+## 🔍 Common XPath Examples
+
+
+| XPath Expression                     | Description                                           |
+|--------------------------------------|-------------------------------------------------------|
+| `//button`                           | Selects all `<button>` elements                       |
+| `//input[@id='username']`            | Selects an input element with ID `"username"`         |
+| `//div[@class='card'][1]`            | Selects the first `<div>` with class `"card"`         |
+| `//a[contains(text(), "Next")]`      | Selects a link containing the text `"Next"`           |
+| `//ul/li`                            | Selects all `<li>` elements inside a `<ul>`           |
+
+
+
+## ✅ Best Practices When Using XPath in Playwright
+Prefer CSS selectors when possible (faster and easier to read).
+
+Use XPath if:
+
+*You need to select elements based on visible text.
+*You need to navigate through complex nested structures.
+*You're working with dynamic elements without reliable CSS selectors.
+
+
+🧰 Tip: How to Test XPath in the Browser
+You can test your XPath expressions directly in your browser:
+
+```
+1. Open DevTools (F12).
+2. Go to the Elements tab.
+3. Press Ctrl + F (or Cmd + F on Mac).
+4. Paste your XPath — matching elements will be highlighted.
+
+```
+
