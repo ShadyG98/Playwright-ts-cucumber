@@ -170,43 +170,11 @@ Feature: Login functionality
 
 The Background runs before every scenario in the feature file.
 
-## ⚙️ Setup Guide (Based on My Experience)
-
-```
-# Create a new project
-npm init -y
-
-# Install Playwright and Cucumber plugins (inside VS Code)
-# Extensions: "Playwright Test for VS Code", "Cucumber (Gherkin) Full Support"
-
-# Open the command palette and run:
-Test: Install Playwright
-
-```
-
-## 📦 Install dependencies
-
-```
-npm install @cucumber/cucumber --save-dev
-npm install ts-node --save-dev
-
-```
-
-## 🔧 Update package.json
-
-```
-"scripts": {
-  "test": "cucumber-js test"
-}
-
-```
 
 ## 🔧 Optional: Change Feature & Step Paths
 Open VS Code Settings
 
-Search for cucumber
-
-Modify:
+Search for cucumber and modify:
 
 * cucumber.features: path to your .feature files
 * cucumber.glue: path to your step definitions
@@ -258,12 +226,12 @@ Prefer CSS selectors when possible (faster and easier to read).
 
 Use XPath if:
 
-*You need to select elements based on visible text.
-*You need to navigate through complex nested structures.
-*You're working with dynamic elements without reliable CSS selectors.
+* You need to select elements based on visible text.
+* You need to navigate through complex nested structures.
+* You're working with dynamic elements without reliable CSS selectors.
 
 
-🧰 Tip: How to Test XPath in the Browser
+## 🧰 Tip: How to Test XPath in the Browser
 You can test your XPath expressions directly in your browser:
 
 ```
@@ -273,4 +241,39 @@ You can test your XPath expressions directly in your browser:
 4. Paste your XPath — matching elements will be highlighted.
 
 ```
+## 📘 Failed login attempt
 
+🧩 Example
+```
+When('Login should fail', async function () {
+  const failureMessage = page.locator("mat-error[role='alert']");
+  await expect(failureMessage).toBeVisible();
+  await browser.close();
+});
+```
+
+🧩 Step-by-step breakdown:
+
+```
+When('Login should fail', ...):
+
+```
+This defines a Cucumber step that gets triggered when the .feature file includes the phrase When Login should fail.
+
+```
+const failureMessage = page.locator("mat-error[role='alert']");:
+
+```
+This line locates the UI element where the error message appears after a failed login. In this case, it targets a <mat-error> component with the role="alert" attribute.
+
+```
+await expect(failureMessage).toBeVisible();:
+
+```
+This line asserts that the error message is visible, meaning the app responded correctly to the invalid credentials.
+
+```
+await browser.close();:
+
+```
+Closes the browser once the test is completed.
