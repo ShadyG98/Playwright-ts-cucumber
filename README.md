@@ -277,3 +277,118 @@ await browser.close();:
 
 ```
 Closes the browser once the test is completed.
+
+## 🧰 Tip: Why await browser.close() is not used in each step when using hooks
+
+When you use hooks in Cucumber + Playwright, the browser lifecycle (open/close) is managed centrally instead of inside each test step.
+
+🔹 Without hooks
+You would need to open and close the browser in every step:
+
+```
+Given("I open the app", async function () {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.goto("https://example.com");
+  await browser.close(); // closed here in the step
+});
+```
+
+❌ Problems:
+
+* Code duplication in multiple scenarios.
+* Each step handles its own browser lifecycle.
+
+🔹 With hooks
+Hooks like BeforeAll, Before, After, AfterAll centralize setup and teardown:
+
+```
+// hooks.ts
+import { BeforeAll, AfterAll, Before, After } from "@cucumber/cucumber";
+import { chromium, Browser, Page } from "playwright";
+import { pageFixture } from "./pageFixture";
+
+let browser: Browser;
+
+BeforeAll(async () => {
+  browser = await chromium.launch({ headless: false });
+});
+
+Before(async () => {
+  pageFixture.page = await browser.newPage();
+});
+
+After(async () => {
+  await pageFixture.page.close();
+});
+
+AfterAll(async () => {
+  await browser.close(); // closed once here, after all tests
+});
+
+```
+
+✅ Benefits:
+
+* `await browser.close()` runs only once in `AfterAll`, not in each step.
+* Less repetitive code.
+* Cleaner and more maintainable tests.
+
+Short summary:
+Hooks take care of starting and stopping the browser for all tests, so individual steps don’t need to handle it.
+
+## 📘 Context In Playwright.
+
+```
+context = await browser.newContext();
+```
+
+Means you are creating a new browser context — essentially a fresh, isolated environment inside the same browser instance.
+
+🔹 What is a browser context?
+
+* Think of it like a separate browser profile.
+* Each context has its own cookies, local storage, and session data.
+* You can run multiple contexts in the same browser without them interfering with each other.
+
+🔹 Why use it?
+
+* To simulate different users in the same test run.
+* To keep tests independent (so one test’s data doesn’t leak into another).
+* It’s faster than launching a brand new browser each time.
+
+Example:
+```
+const browser = await chromium.launch();
+const context = await browser.newContext(); // new isolated environment
+const page = await context.newPage();
+await page.goto("https://example.com");
+```
+
+Here:
+`browser` → the main browser instance.
+`context` → a fresh environment inside that browser.
+`page` → the tab where you run the test.
+
+
+## 📜 Code:
+
+```
+AfterStep(async function ({ pickle, result }) {
+    const img = await pageFixture.page.screenshot({
+        path: `./test-result/screenshots/${pickle.name}.png`,
+        type: "png"
+    });
+    await this.attach(img, "image/png");
+});
+```
+
+Parameters { pickle, result }
+
+`pickle` → This is Cucumber’s internal object representing the scenario and the step being run.
+
+`pickle.name` gives you the scenario’s name (used here for naming the screenshot file).
+
+`result` → Contains the step’s execution result (pass/fail info), though in your code it’s not used directly.
+
+
