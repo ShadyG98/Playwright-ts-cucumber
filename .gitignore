@@ -7,3 +7,7 @@ node_modules/
 /playwright/.cache/
 /test-result/
 cucumber-report.html
+assets
+/features
+@rerun.txt
+index.html

@@ -6,34 +6,46 @@ import { pageFixture } from "../../hooks/pageFixture";
 setDefaultTimeout(60 * 1000 * 2)
 
 Given('User navigates to the application', async function () {
-    await pageFixture.page.goto("https://bookcart.azurewebsites.net/");
+    await pageFixture.page.goto("https://cadetpro.devgine.com.ar/app/orders");
 })
 
 Given('User click on the login link', async function () {
-    await pageFixture.page.locator("//span[text()='Login']").click();
+    await pageFixture.page.locator("//button[contains(., 'Iniciar sesión')]").click();
 });
 
 Given('User enter the username as {string}', async function (username) {
-    await pageFixture.page.locator("input[formcontrolname='username']").type(username);
+    this.username = username; 
+    await pageFixture.page.locator("//input[@type='text']").fill(username);
 });
 
 Given('User enter the password as {string}', async function (password) {
-    await pageFixture.page.locator("input[formcontrolname='password']").type(password);
+    this.password = password;
+    await pageFixture.page.getByRole('textbox', { name: 'Contraseña' }).fill(password);
 })
 
 When('User click on the login button', async function () {
-    await pageFixture.page.locator("button[color='primary']").click();
+    await pageFixture.page.locator("//button[contains(., 'Iniciar sesión')]").click();
     await pageFixture.page.waitForLoadState();
     await pageFixture.page.waitForTimeout(2000);
 });
 
-
 Then('Login should be success', async function () {
-    const text = await pageFixture.page.locator("//button[contains(@class,'mat-focus-indicator mat-menu-trigger')]//span[1]").textContent();
-    console.log("Username: " + text);
-})
+    const response = await pageFixture.page.request.post(
+        "https://cadetpro.devgine.com.ar/api/auth/login",
+        {
+            data: {
+                username: this.username,
+                password: this.password
+            }
+        }
+    );
+    await pageFixture.page.waitForTimeout(2000);
+    expect(response.status()).toBe(200);
+});
 
 When('Login should fail', async function () {
-    const failureMesssage = pageFixture.page.locator("mat-error[role='alert']");
-    await expect(failureMesssage).toBeVisible();
+    const failureMesssage = await pageFixture.page.request.post("https://cadetpro.devgine.com.ar/api/auth/login");
+    expect(failureMesssage.status()).toBe(401);
+    const failureMessage = pageFixture.page.locator("//p[contains(text(),'Usuario o contraseña incorrectos')]");
+    await expect(failureMessage).toBeVisible();
 });

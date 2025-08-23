@@ -5,13 +5,13 @@ Feature: User Authentication tests
     And User click on the login link
 
   Scenario: Login should be success
-    And User enter the username as "ortoni11"
-    And User enter the password as "Pass1234"
+    And User enter the username as "andy"
+    And User enter the password as "123456"
     When User click on the login button
     Then Login should be success
 
   Scenario: Login should not be success
-    Given User enter the username as "koushik"
-    Given User enter the password as "Passkoushik"
+    Given User enter the username as "string"
+    Given User enter the password as "string"
     When User click on the login button
     But Login should fail
