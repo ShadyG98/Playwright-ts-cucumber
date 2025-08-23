@@ -6,7 +6,7 @@ let browser: Browser;
 let context: BrowserContext;
 
 BeforeAll(async function () {
-    browser = await chromium.launch({ headless: false });
+    browser = await chromium.launch({ headless: !false });
 });
 
 Before(async function () {
@@ -15,20 +15,19 @@ Before(async function () {
     pageFixture.page = page;
 });
 
-AfterStep(async function ({ pickle, result }) {
-    const img = await pageFixture.page.screenshot({ path: `./test-result/screenshots/${pickle.name}.png`, type: "png" })
-    await this.attach(img, "image/png");
-});
+// AfterStep(async function ({ pickle, result }) {
+//     const img = await pageFixture.page.screenshot({ path: `./test-result/screenshots/${pickle.name}.png`, type: "png" })
+//     await this.attach(img, "image/png");
+// });
 
 After(async function ({ pickle, result }) {
     console.log(result?.status);
     // screenshot
     if (result?.status == Status.FAILED) {
-        const img = await pageFixture.page.screenshot({ path: `./test-result/screenshots/${pickle.name}.png`, type: "png" })
+        const img = await pageFixture.page.screenshot({ path: `./test-results/screenshots/${pickle.name}.png`, type: "png" })
         await this.attach(img, "image/png");
     }
     await pageFixture.page.close();
-    await context.close();
 });
 
 AfterAll(async function () {
