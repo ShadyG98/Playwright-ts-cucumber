@@ -392,3 +392,13 @@ Parameters { pickle, result }
 `result` → Contains the step’s execution result (pass/fail info), though in your code it’s not used directly.
 
 
+## Multiple Cucumber HTML Reporter
+credits to: https://github.com/WasiqB/multiple-cucumber-html-reporter?tab=readme-ov-file
+
+Use of the library to implement tests in the project. API change due to the previous one no longer working on another device."
+
+<img width="1848" height="912" alt="image" src="https://github.com/user-attachments/assets/9d8c7100-0158-4204-acfb-a4dfc5a53f37" />
+
+Cucumber Report
+
+<img width="1571" height="878" alt="image" src="https://github.com/user-attachments/assets/8bd71968-6464-4d51-b590-47f68b7e535c" />
