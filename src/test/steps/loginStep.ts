@@ -14,7 +14,7 @@ Given('User click on the login link', async function () {
 });
 
 Given('User enter the username as {string}', async function (username) {
-    this.username = username; 
+    this.username = username;
     await pageFixture.page.locator("//input[@type='text']").fill(username);
 });
 
@@ -44,8 +44,11 @@ Then('Login should be success', async function () {
 });
 
 When('Login should fail', async function () {
-    const failureMesssage = await pageFixture.page.request.post("https://cadetpro.devgine.com.ar/api/auth/login");
-    expect(failureMesssage.status()).toBe(401);
+    const response = await pageFixture.page.request.post(
+        "https://cadetpro.devgine.com.ar/api/auth/login",
+        { data: { username: this.username, password: this.password } }
+    );
+    expect(response.status()).toBe(401);
     const failureMessage = pageFixture.page.locator("//p[contains(text(),'Usuario o contraseña incorrectos')]");
     await expect(failureMessage).toBeVisible();
 });
