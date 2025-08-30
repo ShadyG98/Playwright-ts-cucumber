@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "npx ts-node src/helper/init.ts",
-    "test": "cucumber-js \"src/test/features/",
+    "test": "cucumber-js src/test/features/",
     "posttest": "npx ts-node src/helper/report.ts"
   },
   "keywords": [
