@@ -5,7 +5,7 @@ Feature: User Authentication tests
     And User click on the login link
 
   Scenario: Login should be success
-    And User enter the username as "andy"
+    And User enter the username as "brenda"
     And User enter the password as "123456"
     When User click on the login button
     Then Login should be success
@@ -14,4 +14,4 @@ Feature: User Authentication tests
     Given User enter the username as "string"
     Given User enter the password as "string"
     When User click on the login button
-    But Login should fail
+    Then Login should fail

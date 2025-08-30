@@ -1,9 +1,13 @@
-const fs = require("fs-extra");
-try {
-    fs.ensureDir("test-results");
-    fs.emptyDir("test-results")
+import fs from "fs-extra";
 
-} catch (error) {
-    console.log("Folder not created! " + error);
-
+export async function initTestResults() {
+    try {
+        await fs.ensureDir("test-results");
+        await fs.emptyDir("test-results");
+        await fs.ensureDir("test-results/screenshots");
+    } catch (error) {
+        console.log("Folder not created! " + error);
+    }
 }
+
+initTestResults();
