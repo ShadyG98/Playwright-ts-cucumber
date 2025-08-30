@@ -402,3 +402,47 @@ Use of the library to implement tests in the project. API change due to the prev
 Cucumber Report
 
 <img width="1571" height="878" alt="image" src="https://github.com/user-attachments/assets/8bd71968-6464-4d51-b590-47f68b7e535c" />
+
+
+## 📌 Minis conceptos
+fs
+await fs.ensureDir("test-results/screenshots");
+
+
+* fs = viene del módulo fs-extra (una librería de Node.js).
+* Es una versión mejorada de fs (filesystem de Node).
+* Agrega funciones útiles que no tiene el fs estándar, como:
+
+`ensureDir(path)` → crea la carpeta si no existe (sin error).
+`emptyDir(path)` → limpia la carpeta.
+
+👉 En este caso:
+`fs.ensureDir("test-results/screenshots")` = se asegura de que exista la carpeta para guardar screenshots.
+
+
+
+Qué significa || true en:
+`"test": "cucumber-js test || true"`
+
+En bash / Linux, || significa "si lo de la izquierda falla, ejecuta lo de la derecha".
+true es un comando que siempre devuelve éxito.
+
+👉 Traducción:
+
+Ejecuta cucumber-js test.
+Si falla, entonces ejecuta true → esto hace que el script no rompa el pipeline (evita que npm test devuelva error).
+📌 Útil en CI/CD cuando quieres que el job siga aunque los tests fallen (por ejemplo, para aún generar el reporte).
+
+
+## 📌 Mini FlowChart
+
+flowchart 
+
+* A[Feature files (.feature)] -->|Texto Gherkin| B[Step Definitions (.ts)]
+* B -->|Ejecución| C[Playwright + PageFixture]
+* C --> D[Hooks (Before/After)]
+* D -->|Si falla| E[Screenshots con fs-extra]
+* D -->|Siempre| F[Cierra la página]
+* C --> G[Resultados en JSON (test-results)]
+* G --> H[multiple-cucumber-html-reporter]
+* H --> I[Reporte HTML final]
