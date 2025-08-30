@@ -1,26 +1,40 @@
 import { Given, When, Then, setDefaultTimeout } from "@cucumber/cucumber";
-
-setDefaultTimeout(60 * 1000 * 2)
-
-import { expect } from "@playwright/test";
 import { pageFixture } from "../../hooks/pageFixture";
 
-Given('User navigates to menu', async function () {
-    await pageFixture.page.locator("//button[span[text()='Ordenes']]").click();
+setDefaultTimeout(60 * 1000 * 2);
+
+// Helper functions
+async function clickButtonByText(text: string) {
+    await pageFixture.page.locator(`button:has-text("${text}")`).click();
+}
+
+async function selectFromDropdown(dropdownSelector: string, optionText: string) {
+    await pageFixture.page.locator(dropdownSelector).click();
+    await pageFixture.page.locator(`//li[@role='option' and text()='${optionText}']`).click();
+}
+
+async function fillInput(selector: string, value: string) {
+    await pageFixture.page.locator(selector).fill(value);
+}
+
+// Step definitions
+Given('User navigates to {string}', async function (menuName: string) {
+    await clickButtonByText(menuName);
 });
 
-Given('User navigates to box', async function () {
-    await pageFixture.page.locator("//button[.//span[text()='Caja']]").click();
-});
-
-Given('the user adds a movement', async function () {
+When('the user adds a movement with entity {string}, person {string} and amount {string}', async function (entity, person, amount) {
+    // Click Add icon
     await pageFixture.page.locator("svg[data-testid='AddIcon']").click();
-    await pageFixture.page.locator("//div[@id='related-entity-select']").click();
-    await pageFixture.page.locator("//li[@role='option' and text()='Personal de cadeteria']").click();
-    await pageFixture.page.locator("button[aria-label='Open']").click();
-    await pageFixture.page.locator("//li[@role='option' and text()='Brenda']").click();
-    await pageFixture.page.locator("input[name='amount']").fill("150");
 
+    // Select entity
+    await selectFromDropdown("#related-entity-select", entity);
+
+    // Select person
+    await pageFixture.page.locator("button[aria-label='Open']").click();
+    await pageFixture.page.locator("//ul[@role='listbox']//li", { hasText: person }).click();
+
+    // Fill amount
+    await fillInput("input[name='amount']", amount);
 });
 
 Then('the movement should be updated', async function () {
