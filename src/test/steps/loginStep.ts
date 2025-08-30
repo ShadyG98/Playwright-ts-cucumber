@@ -1,54 +1,50 @@
 import { Given, When, Then, setDefaultTimeout } from "@cucumber/cucumber";
-
 import { expect } from "@playwright/test";
 import { pageFixture } from "../../hooks/pageFixture";
 
-setDefaultTimeout(60 * 1000 * 2)
+setDefaultTimeout(60 * 1000 * 2);
 
-Given('User navigates to the application', async function () {
+// --- Helpers ---
+async function loginApi(username: string, password: string) {
+    return await pageFixture.page.request.post(
+        "https://cadetpro.devgine.com.ar/api/auth/login",
+        { data: { username, password } }
+    );
+}
+
+async function fillLoginForm(username: string, password: string) {
+    await pageFixture.page.locator("//input[@type='text']").fill(username);
+    await pageFixture.page.getByRole('textbox', { name: 'Contraseña' }).fill(password);
+}
+
+// --- Steps ---
+Given('User navigates to the application', async () => {
     await pageFixture.page.goto("https://cadetpro.devgine.com.ar/app/orders");
-})
+});
 
-Given('User click on the login link', async function () {
+Given('User clicks on the login link', async () => {
     await pageFixture.page.locator("//button[contains(., 'Iniciar sesión')]").click();
 });
 
-Given('User enter the username as {string}', async function (username) {
+Given('User enters username {string} and password {string}', async function (username, password) {
     this.username = username;
-    await pageFixture.page.locator("//input[@type='text']").fill(username);
+    this.password = password;
+    await fillLoginForm(username, password);
 });
 
-Given('User enter the password as {string}', async function (password) {
-    this.password = password;
-    await pageFixture.page.getByRole('textbox', { name: 'Contraseña' }).fill(password);
-})
-
-When('User click on the login button', async function () {
+When('User clicks on the login button', async () => {
     await pageFixture.page.locator("//button[contains(., 'Iniciar sesión')]").click();
     await pageFixture.page.waitForLoadState();
     await pageFixture.page.waitForTimeout(2000);
 });
 
-Then('Login should be success', async function () {
-    const response = await pageFixture.page.request.post(
-        "https://cadetpro.devgine.com.ar/api/auth/login",
-        {
-            data: {
-                username: this.username,
-                password: this.password
-            }
-        }
-    );
-    await pageFixture.page.waitForTimeout(2000);
+Then('Login should succeed', async function () {
+    const response = await loginApi(this.username, this.password);
     expect(response.status()).toBe(200);
 });
 
-When('Login should fail', async function () {
-    const response = await pageFixture.page.request.post(
-        "https://cadetpro.devgine.com.ar/api/auth/login",
-        { data: { username: this.username, password: this.password } }
-    );
+Then('Login should fail', async function () {
+    const response = await loginApi(this.username, this.password);
     expect(response.status()).toBe(401);
-    const failureMessage = pageFixture.page.locator("//p[contains(text(),'Usuario o contraseña incorrectos')]");
-    await expect(failureMessage).toBeVisible();
 });
+

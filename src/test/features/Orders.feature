@@ -1,13 +1,13 @@
 @requiresLogin
 
-Feature: Modify order
+Feature: Add movements
 
-Scenario: Add Movement to box
-Given User navigates to menu
-Given User navigates to box
-And the user adds a movement
-Then the movement should be updated
+  Scenario: Add a movement for Brenda
+    Given User navigates to "Caja"
+    When the user adds a movement with entity "Personal de cadeteria", person "Brenda" and amount "300"
+    Then the movement should be updated
 
-    # Examples: 
-    #   | username | password  | book |
-    #   | andy   | 123456 | Roomies  |
+  Scenario: Add a movement for Ale
+    Given User navigates to "Caja"
+    When the user adds a movement with entity "Personal de cadeteria", person "Ale" and amount "200"
+    Then the movement should be updated
