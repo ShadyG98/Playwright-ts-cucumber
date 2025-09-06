@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "npx ts-node src/helper/init.ts",
-    "test": "cucumber-js src/test/features/",
+    "test": "cross-env ENV=prod cucumber-js test",
     "posttest": "npx ts-node src/helper/report.ts"
   },
   "keywords": [
@@ -19,6 +19,8 @@
     "@cucumber/cucumber": "^9.0.1",
     "@playwright/test": "^1.31.2",
     "@types/fs-extra": "^11.0.4",
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.2",
     "fs-extra": "^11.1.1",
     "multiple-cucumber-html-reporter": "^3.9.3",
     "ts-node": "^10.9.1"
