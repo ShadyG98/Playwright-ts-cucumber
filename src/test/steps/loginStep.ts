@@ -19,7 +19,7 @@ async function fillLoginForm(username: string, password: string) {
 
 // --- Steps ---
 Given('User navigates to the application', async () => {
-    await pageFixture.page.goto("https://cadetpro.devgine.com.ar/app/orders");
+    await pageFixture.page.goto(process.env.BASEURL!);
 });
 
 Given('User clicks on the login link', async () => {
